@@ -147,6 +147,7 @@ describe 'owncloud' do
             is_expected.to contain_package('owncloud').with_ensure('present')
           end
 
+
           # owncloud::apache
 
           it 'should include class to manage webserver and create vhost' do
@@ -368,6 +369,19 @@ describe 'owncloud' do
                 ssl_key: '/srv/www/owncloud/certs/key.crt',
                 ssl: true
               )
+            end
+          end
+
+          describe 'when manage_git is set' do
+            # owncloud::install::git
+            let(:params) { {manage_git: true} }
+
+            it 'should not include any repository and package' do
+              is_expected.to contain_class('owncloud::install::git').that_comes_before('owncloud::apache')
+              is_expected.not_to contain_class('apt')
+              is_expected.not_to contain_class('epel')
+              is_expected.not_to contain_yumrepo('isv:ownCloud:community')
+              is_expected.not_to contain_apt__source('owncloud')
             end
           end
         end

@@ -13,6 +13,7 @@ class owncloud (
   $manage_apache   = true,
   $manage_db       = true,
   $manage_repo     = true,
+  $manage_git      = false,
   $manage_skeleton = true,
   $manage_vhost    = true,
   $ssl             = false,
@@ -27,11 +28,18 @@ class owncloud (
   validate_bool($manage_apache)
   validate_bool($manage_db)
   validate_bool($manage_repo)
+  validate_bool($manage_git)
   validate_bool($manage_skeleton)
   validate_bool($manage_vhost)
   validate_bool($ssl)
 
   validate_re($db_type, '^mysql$', '$database must be \'mysql\'')
+
+  if $manage_git {
+    $install_class = '::owncloud::install::git'
+  } else {
+    $install_class = '::owncloud::install'
+  }
 
   if $ssl {
     validate_absolute_path($ssl_cert, $ssl_key)
@@ -40,7 +48,7 @@ class owncloud (
     if $ssl_chain { validate_absolute_path($ssl_chain) }
   }
 
-  class { '::owncloud::install': } ->
+  class { $install_class: } ->
   class { '::owncloud::apache': } ->
   class { '::owncloud::config': } ->
   Class['::owncloud']
