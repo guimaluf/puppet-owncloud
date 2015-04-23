@@ -10,5 +10,6 @@ fixtures:
     epel: "https://github.com/stahnma/puppet-module-epel.git"
     mysql: "https://github.com/puppetlabs/puppetlabs-mysql.git"
     stdlib: "https://github.com/puppetlabs/puppetlabs-stdlib.git"
+    vcsrepo: "https://github.com/puppetlabs/puppetlabs-vcsrepo.git"
   symlinks:
     owncloud: "#{source_dir}"
